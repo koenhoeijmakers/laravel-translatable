@@ -20,7 +20,7 @@ trait HasTranslations
      *
      * @return void
      */
-    public static function bootTranslatable()
+    public static function bootHasTranslations()
     {
         if (config('translatable.use_saving_service', true)) {
             static::saving(function (self $self) {
