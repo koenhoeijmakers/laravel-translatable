@@ -18,7 +18,7 @@ class JoinTranslationScope implements Scope
     public function apply(Builder $builder, Model $model)
     {
         $builder->join($model->getTranslationTable(), $model->getTable() . '.' . $model->getKeyName(), $model->getTranslationTable() . '.' . $model->getForeignKey())
-            ->where('locale', app()->getLocale())
+            ->where($model->getLocaleKeyName(), app()->getLocale())
             ->select($model->getTable() . '.*', $model->getTranslatable());
     }
 }
