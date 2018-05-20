@@ -4,9 +4,8 @@ namespace KoenHoeijmakers\LaravelTranslatable\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
-use KoenHoeijmakers\LaravelTranslatable\Contracts\Services\TranslationSavingServiceContract;
 
-class TranslationSavingService implements TranslationSavingServiceContract
+class TranslationSavingService
 {
     /**
      * The application.
