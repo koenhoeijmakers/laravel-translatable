@@ -17,5 +17,12 @@
     "require": {
         "php": ">=7.2",
         "laravel/framework": "^5.6"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "KoenHoeijmakers\\LaravelTranslatable\\TranslatableServiceProvider"
+            ]
+        }
     }
 }
