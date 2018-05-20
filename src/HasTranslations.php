@@ -125,7 +125,17 @@ trait HasTranslations
      */
     public function storeTranslation(string $locale, array $attributes = [])
     {
-        return $this->translations()->updateOrCreate([$this->getLocaleKeyName() => $locale], $attributes);
+        if (!is_null($model = $this->translations()->where($this->getLocaleKeyName(), $locale)->first())) {
+            $model->update($attributes);
+
+            return $model;
+        }
+
+        $model = $this->translations()->make($attributes);
+        $model->setAttribute($this->getLocaleKeyName(), $locale);
+        $model->save();
+
+        return $model;
     }
 
     /**
