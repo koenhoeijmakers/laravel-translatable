@@ -5,6 +5,7 @@ namespace KoenHoeijmakers\LaravelTranslatable\Scopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Database\Query\JoinClause;
 
 class JoinTranslationScope implements Scope
 {
@@ -17,9 +18,12 @@ class JoinTranslationScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->join($model->getTranslationTable(), $model->getTable() . '.' . $model->getKeyName(), $model->getTranslationTable() . '.' . $model->getForeignKey())
-            ->where($model->getLocaleKeyName(), app()->getLocale())
-            ->select($model->getTable() . '.*', $this->formatTranslatableColumns($model));
+        $builder->join($model->getTranslationTable(), function (JoinClause $join) use ($model) {
+            $join->on(
+                $model->getTable() . '.' . $model->getKeyName(),
+                $model->getTranslationTable() . '.' . $model->getForeignKey()
+            )->where($model->getLocaleKeyName(), app()->getLocale());
+        })->select($model->getTable() . '.*', $this->formatTranslatableColumns($model));
     }
 
     /**
