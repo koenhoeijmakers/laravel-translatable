@@ -17,11 +17,4 @@ return [
      |
      */
     'locale_key_name' => 'locale',
-
-    /*
-     |
-     | You may set this to "true" when you need the saved translations in the newly created model directly.
-     |
-     */
-    'refresh_after_save' => false,
 ];
