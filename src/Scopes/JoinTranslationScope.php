@@ -19,6 +19,19 @@ class JoinTranslationScope implements Scope
     {
         $builder->join($model->getTranslationTable(), $model->getTable() . '.' . $model->getKeyName(), $model->getTranslationTable() . '.' . $model->getForeignKey())
             ->where($model->getLocaleKeyName(), app()->getLocale())
-            ->select($model->getTable() . '.*', $model->getTranslatable());
+            ->select($model->getTable() . '.*', $this->formatTranslatableColumns($model));
+    }
+
+    /**
+     * Format the translated columns.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @return string
+     */
+    protected function formatTranslatableColumns(Model $model)
+    {
+        return implode(',', array_map(function ($item) use ($model) {
+            return $model->getTranslationTable() . '.' . $item;
+        }, $model->getTranslatable()));
     }
 }
