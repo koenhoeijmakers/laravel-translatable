@@ -1,0 +1,21 @@
+{
+    "name": "koenhoeijmakers/larravel-translatable",
+    "description": "Laravel Translations",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Koen Hoeijmakers",
+            "email": "koen@hoeijmakers.me"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "KoenHoeijmakers\\LaravelTranslatable\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.2",
+        "laravel/framework": "^5.6"
+    }
+}
