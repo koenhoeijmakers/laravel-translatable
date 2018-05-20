@@ -28,7 +28,7 @@ class TranslatableServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(TranslationSavingServiceContract::class, function (Application $app) {
+        $this->app->singleton(TranslationSavingService::class, function (Application $app) {
             return new TranslationSavingService($app);
         });
 

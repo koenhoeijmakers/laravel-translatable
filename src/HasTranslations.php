@@ -3,9 +3,9 @@
 namespace KoenHoeijmakers\LaravelTranslatable;
 
 use Illuminate\Support\Arr;
-use KoenHoeijmakers\LaravelTranslatable\Contracts\Services\TranslationSavingServiceContract;
 use KoenHoeijmakers\LaravelTranslatable\Exceptions\MissingTranslationsException;
 use KoenHoeijmakers\LaravelTranslatable\Scopes\JoinTranslationScope;
+use KoenHoeijmakers\LaravelTranslatable\Services\TranslationSavingService;
 
 /**
  * Trait Translatable
@@ -24,11 +24,11 @@ trait HasTranslations
     {
         if (config('translatable.use_saving_service', true)) {
             static::saving(function (self $self) {
-                app()->make(TranslationSavingServiceContract::class)->rememberTranslationForModel($self);
+                app()->make(TranslationSavingService::class)->rememberTranslationForModel($self);
             });
 
             static::saved(function (self $self) {
-                app(TranslationSavingServiceContract::class)->storeTranslationOnModel($self);
+                app(TranslationSavingService::class)->storeTranslationOnModel($self);
             });
         }
 
