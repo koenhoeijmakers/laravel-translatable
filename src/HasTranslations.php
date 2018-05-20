@@ -16,22 +16,13 @@ use KoenHoeijmakers\LaravelTranslatable\Scopes\JoinTranslationScope;
 trait HasTranslations
 {
     /**
-     * The translatable properties.
-     *
-     * @var array
-     */
-    protected $translatable = [
-        //'key',
-    ];
-
-    /**
      * Boot the translatable trait.
      *
      * @return void
      */
     public static function bootTranslatable()
     {
-        if (config()->get('translatable.use_saving_service')) {
+        if (config('translatable.use_saving_service', true)) {
             static::saving(function (self $self) {
                 app()->make(TranslationSavingServiceContract::class)->rememberTranslationForModel($self);
             });
