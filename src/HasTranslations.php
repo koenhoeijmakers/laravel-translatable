@@ -29,6 +29,10 @@ trait HasTranslations
 
             static::saved(function (self $self) {
                 app(TranslationSavingService::class)->storeTranslationOnModel($self);
+
+                if ($self->shouldRefreshAfterSave()) {
+                    $self->refreshTranslation();
+                }
             });
         }
 
@@ -169,6 +173,36 @@ trait HasTranslations
      */
     public function getLocaleKeyName()
     {
-        return config('translatable.locale_key_name', 'locale');
+        return $this->localeKeyName ?? config('translatable.locale_key_name', 'locale');
+    }
+
+    /**
+     * Whether the model should be refreshed after being saved.
+     *
+     * @return bool
+     */
+    public function shouldRefreshAfterSave()
+    {
+        return $this->refreshAfterSave ?? config('translatable.refresh_after_save', false);
+    }
+
+    /**
+     * Get a freshly translated model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations|null
+     */
+    public function getFreshTranslatedModel()
+    {
+        return static::find($this->getKey());
+    }
+
+    /**
+     * @return $this
+     */
+    public function refreshTranslation()
+    {
+        return $this->setRawAttributes(
+            $this->getFreshTranslatedModel()->getAttributes()
+        );
     }
 }
