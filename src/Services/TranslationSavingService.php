@@ -38,9 +38,13 @@ class TranslationSavingService implements TranslationSavingServiceContract
      */
     public function rememberTranslationForModel(Model $model)
     {
-        $this->rememberTranslation(
-            $this->getModelIdentifier($model), $model->getTranslatableAttributes()
-        );
+        $attributes = $model->getTranslatableAttributes();
+
+        $this->rememberTranslation($this->getModelIdentifier($model), $attributes);
+
+        foreach (array_keys($attributes) as $attribute) {
+            $model->offsetUnset($attribute);
+        }
     }
 
     /**
