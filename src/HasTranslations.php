@@ -125,7 +125,7 @@ trait HasTranslations
      */
     public function storeTranslation(string $locale, array $attributes = [])
     {
-        return $this->translations()->updateOrCreate([$this->getLocaleKeyName(), $locale], $attributes);
+        return $this->translations()->updateOrCreate([$this->getLocaleKeyName() => $locale], $attributes);
     }
 
     /**
@@ -157,7 +157,7 @@ trait HasTranslations
      *
      * @return string
      */
-    protected function getLocaleKeyName()
+    public function getLocaleKeyName()
     {
         return config('translatable.locale_key_name', 'locale');
     }
