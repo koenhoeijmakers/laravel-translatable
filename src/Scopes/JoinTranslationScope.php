@@ -32,7 +32,7 @@ class JoinTranslationScope implements Scope
      * @param \Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations $model
      * @return string
      */
-    protected function formatTranslatableColumns(Model $model)
+    protected function formatTranslatableColumns(Model $model): string
     {
         $table = $model->getTranslationTable();
 
