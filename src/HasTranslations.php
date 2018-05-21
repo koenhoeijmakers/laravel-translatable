@@ -3,17 +3,15 @@
 namespace KoenHoeijmakers\LaravelTranslatable;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use KoenHoeijmakers\LaravelTranslatable\Exceptions\MissingTranslationsException;
 use KoenHoeijmakers\LaravelTranslatable\Scopes\JoinTranslationScope;
 use KoenHoeijmakers\LaravelTranslatable\Services\TranslationSavingService;
 
 /**
- * Trait Translatable
+ * Trait HasTranslations
  *
- * @package KoenHoeijmakers\LaravelTranslatable
- * @mixin \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 trait HasTranslations
 {

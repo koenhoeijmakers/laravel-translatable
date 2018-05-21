@@ -50,11 +50,11 @@ class TranslationSavingService
     /**
      * Remember the translation on the given key.
      *
-     * @param mixed $key
+     * @param string $key
      * @param array $attributes
      * @return void
      */
-    public function rememberTranslation($key, array $attributes)
+    public function rememberTranslation(string $key, array $attributes)
     {
         $this->translations[$key] = $attributes;
     }
@@ -62,10 +62,10 @@ class TranslationSavingService
     /**
      * Pull the translation on the given key.
      *
-     * @param mixed $key
+     * @param string $key
      * @return mixed
      */
-    public function pullRememberedTranslation($key)
+    public function pullRememberedTranslation(string $key)
     {
         $value = $this->translations[$key];
 
