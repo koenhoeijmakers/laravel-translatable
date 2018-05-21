@@ -16,6 +16,13 @@ use KoenHoeijmakers\LaravelTranslatable\Services\TranslationSavingService;
 trait HasTranslations
 {
     /**
+     * The current locale, used to handle internal states.
+     *
+     * @var string|null
+     */
+    protected $currentLocale = null;
+
+    /**
      * Boot the translatable trait.
      *
      * @return void
@@ -186,22 +193,64 @@ trait HasTranslations
     }
 
     /**
+     * Get the locale.
+     *
+     * @return mixed|string
+     */
+    public function getLocale()
+    {
+        return $this->currentLocale ?? app()->getLocale();
+    }
+
+    /**
+     * Refresh the translation (in the current locale).
+     *
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations|\KoenHoeijmakers\LaravelTranslatable\HasTranslations[]|null
      */
     public function refreshTranslation()
     {
-        if (! $this->exists) {
+        if (!$this->exists) {
             return null;
         }
 
         $attributes = Arr::only(
-            static::findOrFail($this->getKey())->getAttributes(), $this->getTranslatable()
+            static::findOrFail($this->getKey())->attributes, $this->getTranslatable()
         );
 
         foreach ($attributes as $key => $value) {
             $this->setAttribute($key, $value);
         }
 
+        $this->syncOriginal();
+
         return $this;
+    }
+
+    /**
+     * Translate the model to the given locale.
+     *
+     * @param string $locale
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations|\KoenHoeijmakers\LaravelTranslatable\HasTranslations[]|null
+     */
+    public function translate(string $locale)
+    {
+        if (!$this->exists) {
+            return null;
+        }
+
+        $this->currentLocale = $locale;
+
+        return $this->refreshTranslation();
+    }
+
+    /**
+     * Get a new query builder that doesn't have any global scopes (except the JoinTranslationScope).
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function newQueryWithoutScopes()
+    {
+        return parent::newQueryWithoutScopes()
+            ->withGlobalScope(JoinTranslationScope::class, new JoinTranslationScope());
     }
 }

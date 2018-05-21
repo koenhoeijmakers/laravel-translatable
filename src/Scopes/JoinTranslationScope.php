@@ -22,7 +22,7 @@ class JoinTranslationScope implements Scope
             $join->on(
                 $model->getTable() . '.' . $model->getKeyName(),
                 $model->getTranslationTable() . '.' . $model->getForeignKey()
-            )->where($model->getLocaleKeyName(), app()->getLocale());
+            )->where($model->getLocaleKeyName(), $model->getLocale());
         })->select($model->getTable() . '.*', $this->formatTranslatableColumns($model));
     }
 

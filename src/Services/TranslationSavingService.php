@@ -8,26 +8,9 @@ use Illuminate\Foundation\Application;
 class TranslationSavingService
 {
     /**
-     * The application.
-     *
-     * @var \Illuminate\Foundation\Application
-     */
-    protected $app;
-
-    /**
      * @var array
      */
     protected $translations = [];
-
-    /**
-     * TranslationSavingService constructor.
-     *
-     * @param \Illuminate\Foundation\Application $app
-     */
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
 
     /**
      * Remember the translation for the given model.
@@ -57,7 +40,7 @@ class TranslationSavingService
         $identifier = $this->getModelIdentifier($model);
 
         $model->storeTranslation(
-            $this->app->getLocale(),
+            $model->getLocale(),
             $this->pullRememberedTranslation($identifier)
         );
     }
@@ -84,7 +67,9 @@ class TranslationSavingService
      */
     public function pullRememberedTranslation($key)
     {
-        return $this->translations[$key];
+        return tap($this->translations[$key], function () use ($key) {
+            unset($this->translations[$key]);
+        });
     }
 
     /**
