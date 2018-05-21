@@ -29,13 +29,15 @@ class JoinTranslationScope implements Scope
     /**
      * Format the translated columns.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param \Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations $model
      * @return string
      */
     protected function formatTranslatableColumns(Model $model)
     {
-        return implode(',', array_map(function ($item) use ($model) {
-            return $model->getTranslationTable() . '.' . $item;
+        $table = $model->getTranslationTable();
+
+        return implode(',', array_map(function ($item) use ($table) {
+            return $table . '.' . $item;
         }, $model->getTranslatable()));
     }
 }
