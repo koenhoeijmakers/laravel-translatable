@@ -250,14 +250,7 @@ trait HasTranslations
      */
     public function newQueryWithoutScopes()
     {
-        $builder = $this->newEloquentBuilder($this->newBaseQueryBuilder());
-
-        // Once we have the query builders, we will set the model instances so the
-        // builder can easily access any information it may need from the model
-        // while it is constructing and executing various queries against it.
-        return $builder->setModel($this)
-            ->withGlobalScope(JoinTranslationScope::class, new JoinTranslationScope())
-            ->with($this->with)
-            ->withCount($this->withCount);
+        return parent::newQueryWithoutScopes()
+            ->withGlobalScope(JoinTranslationScope::class, new JoinTranslationScope());
     }
 }
