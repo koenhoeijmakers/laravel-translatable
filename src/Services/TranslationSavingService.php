@@ -67,9 +67,11 @@ class TranslationSavingService
      */
     public function pullRememberedTranslation($key)
     {
-        return tap($this->translations[$key], function () use ($key) {
-            unset($this->translations[$key]);
-        });
+        $value = $this->translations[$key];
+
+        unset($this->translations[$key]);
+
+        return $value;
     }
 
     /**
