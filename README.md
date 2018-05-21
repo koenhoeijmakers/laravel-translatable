@@ -24,7 +24,7 @@ php artisan vendor:publish --provider="KoenHoeijmakers\LaravelTranslatable\Trans
 ## Creating a migration
 Start off by creating a migration for the model you wish to translate, we'll go with the `Type` model,
 and thus we'll call our table `type_translations`, which has a `belongsTo` of the `Type` model (`type_id`), 
-a locale (`locale`) and our translatable column, in our case `name`.
+a locale and our translatable columns, in our case `name`.
 
 ```php
 Schema::create('type_translations', function (Blueprint $table) {
@@ -48,7 +48,7 @@ class TypeTranslation extends Model
 ```
 
 ## Registering the trait
-Now you can register the trait, set the `$translatable` and **make sure the translated columns are fillable**, 
+Now you can register the trait, set the `$translatable` property and **make sure the translated columns are fillable**, 
 this is important as the saving service gets the translatable columns from the "original" model,
 and what you can't set, you can't get.
 
