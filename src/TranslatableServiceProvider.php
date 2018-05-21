@@ -2,9 +2,7 @@
 
 namespace KoenHoeijmakers\LaravelTranslatable;
 
-use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use KoenHoeijmakers\LaravelTranslatable\Contracts\Services\TranslationSavingServiceContract;
 use KoenHoeijmakers\LaravelTranslatable\Services\TranslationSavingService;
 
 class TranslatableServiceProvider extends ServiceProvider
@@ -28,8 +26,8 @@ class TranslatableServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(TranslationSavingService::class, function (Application $app) {
-            return new TranslationSavingService($app);
+        $this->app->singleton(TranslationSavingService::class, function () {
+            return new TranslationSavingService();
         });
 
         $this->mergeConfigFrom(__DIR__ . '/../config/translatable.php', 'translatable');

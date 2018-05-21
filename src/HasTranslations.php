@@ -16,6 +16,13 @@ use KoenHoeijmakers\LaravelTranslatable\Services\TranslationSavingService;
 trait HasTranslations
 {
     /**
+     * The current locale, used to handle internal states.
+     *
+     * @var string|null
+     */
+    protected $currentLocale = null;
+
+    /**
      * Boot the translatable trait.
      *
      * @return void
@@ -186,6 +193,18 @@ trait HasTranslations
     }
 
     /**
+     * Get the locale.
+     *
+     * @return mixed|string
+     */
+    public function getLocale()
+    {
+        return $this->currentLocale ?? app()->getLocale();
+    }
+
+    /**
+     * Refresh the translation (in the current locale).
+     *
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations|\KoenHoeijmakers\LaravelTranslatable\HasTranslations[]|null
      */
     public function refreshTranslation()
@@ -202,6 +221,25 @@ trait HasTranslations
             $this->setAttribute($key, $value);
         }
 
+        $this->syncOriginal();
+
         return $this;
+    }
+
+    /**
+     * Translate the model to the given locale.
+     *
+     * @param string $locale
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations|\KoenHoeijmakers\LaravelTranslatable\HasTranslations[]|null
+     */
+    public function translate(string $locale)
+    {
+        if (! $this->exists) {
+            return null;
+        }
+
+        $this->currentLocale = $locale;
+
+        return $this->refreshTranslation();
     }
 }
