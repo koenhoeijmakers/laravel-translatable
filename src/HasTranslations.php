@@ -23,12 +23,14 @@ trait HasTranslations
     public static function bootHasTranslations()
     {
         if (config('translatable.use_saving_service', true)) {
-            static::saving(function (self $self) {
-                app()->make(TranslationSavingService::class)->rememberTranslationForModel($self);
+            static::saving(function (self $model) {
+                app(TranslationSavingService::class)->rememberTranslationForModel($model);
             });
 
-            static::saved(function (self $self) {
-                app(TranslationSavingService::class)->storeTranslationOnModel($self);
+            static::saved(function (self $model) {
+                app(TranslationSavingService::class)->storeTranslationOnModel($model);
+
+                $model->refreshTranslation();
             });
         }
 
@@ -181,5 +183,25 @@ trait HasTranslations
     public function getLocaleKeyName()
     {
         return $this->localeKeyName ?? config('translatable.locale_key_name', 'locale');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations|\KoenHoeijmakers\LaravelTranslatable\HasTranslations[]|null
+     */
+    public function refreshTranslation()
+    {
+        if (! $this->exists) {
+            return null;
+        }
+
+        $attributes = Arr::only(
+            static::findOrFail($this->getKey())->getAttributes(), $this->getTranslatable()
+        );
+
+        foreach ($attributes as $key => $value) {
+            $this->setAttribute($key, $value);
+        }
+
+        return $this;
     }
 }
