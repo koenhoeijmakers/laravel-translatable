@@ -2,16 +2,16 @@
 
 namespace KoenHoeijmakers\LaravelTranslatable;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use KoenHoeijmakers\LaravelTranslatable\Exceptions\MissingTranslationsException;
 use KoenHoeijmakers\LaravelTranslatable\Scopes\JoinTranslationScope;
 use KoenHoeijmakers\LaravelTranslatable\Services\TranslationSavingService;
 
 /**
- * Trait Translatable
+ * Trait HasTranslations
  *
- * @package KoenHoeijmakers\LaravelTranslatable
- * @mixin \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+ * @mixin \Illuminate\Database\Eloquent\Model
  */
 trait HasTranslations
 {
@@ -58,7 +58,7 @@ trait HasTranslations
      * @param string $locale
      * @return bool
      */
-    public function translationExists(string $locale)
+    public function translationExists(string $locale): bool
     {
         return $this->translations()->where($this->getLocaleKeyName(), $locale)->exists();
     }
@@ -68,7 +68,7 @@ trait HasTranslations
      *
      * @return string
      */
-    public function getTranslationModel()
+    public function getTranslationModel(): string
     {
         if (isset($this->translationModel)) {
             return $this->translationModel;
@@ -82,7 +82,7 @@ trait HasTranslations
      *
      * @return string
      */
-    protected function getTranslationModelSuffix()
+    protected function getTranslationModelSuffix(): string
     {
         return 'Translation';
     }
@@ -92,7 +92,7 @@ trait HasTranslations
      *
      * @return string
      */
-    public function getTranslationTable()
+    public function getTranslationTable(): string
     {
         $model = $this->getTranslationModel();
 
@@ -119,7 +119,7 @@ trait HasTranslations
      * @return array
      * @throws \KoenHoeijmakers\LaravelTranslatable\Exceptions\MissingTranslationsException
      */
-    public function getTranslatable()
+    public function getTranslatable(): array
     {
         if (!isset($this->translatable)) {
             throw new MissingTranslationsException('Model "' . static::class . '" is missing translations');
@@ -133,7 +133,7 @@ trait HasTranslations
      *
      * @return array
      */
-    public function getTranslatableAttributes()
+    public function getTranslatableAttributes(): array
     {
         return Arr::only($this->getAttributes(), $this->translatable);
     }
@@ -175,7 +175,7 @@ trait HasTranslations
 
     /**
      * @param string $locale
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Model|self
      */
     public function getTranslation(string $locale)
     {
@@ -187,7 +187,7 @@ trait HasTranslations
      *
      * @return string
      */
-    public function getLocaleKeyName()
+    public function getLocaleKeyName(): string
     {
         return $this->localeKeyName ?? config('translatable.locale_key_name', 'locale');
     }
@@ -195,9 +195,9 @@ trait HasTranslations
     /**
      * Get the locale.
      *
-     * @return mixed|string
+     * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->currentLocale ?? app()->getLocale();
     }
@@ -205,7 +205,7 @@ trait HasTranslations
     /**
      * Refresh the translation (in the current locale).
      *
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations|\KoenHoeijmakers\LaravelTranslatable\HasTranslations[]|null
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function refreshTranslation()
     {
@@ -230,7 +230,7 @@ trait HasTranslations
      * Translate the model to the given locale.
      *
      * @param string $locale
-     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|\KoenHoeijmakers\LaravelTranslatable\HasTranslations|\KoenHoeijmakers\LaravelTranslatable\HasTranslations[]|null
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function translate(string $locale)
     {
@@ -246,9 +246,9 @@ trait HasTranslations
     /**
      * Get a new query builder that doesn't have any global scopes (except the JoinTranslationScope).
      *
-     * @return \Illuminate\Database\Eloquent\Builder|static
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function newQueryWithoutScopes()
+    public function newQueryWithoutScopes(): Builder
     {
         return parent::newQueryWithoutScopes()
             ->withGlobalScope(JoinTranslationScope::class, new JoinTranslationScope());

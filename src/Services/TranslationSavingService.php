@@ -8,6 +8,8 @@ use Illuminate\Foundation\Application;
 class TranslationSavingService
 {
     /**
+     * The translations that are being stored in this request.
+     *
      * @var array
      */
     protected $translations = [];
@@ -48,28 +50,28 @@ class TranslationSavingService
     /**
      * Remember the translation on the given key.
      *
-     * @param mixed $key
+     * @param string $key
      * @param array $attributes
-     * @return \KoenHoeijmakers\LaravelTranslatable\Services\TranslationSavingService
+     * @return void
      */
-    public function rememberTranslation($key, array $attributes)
+    public function rememberTranslation(string $key, array $attributes)
     {
         $this->translations[$key] = $attributes;
-
-        return $this;
     }
 
     /**
      * Pull the translation on the given key.
      *
-     * @param mixed $key
+     * @param string $key
      * @return mixed
      */
-    public function pullRememberedTranslation($key)
+    public function pullRememberedTranslation(string $key)
     {
-        return tap($this->translations[$key], function () use ($key) {
-            unset($this->translations[$key]);
-        });
+        $value = $this->translations[$key];
+
+        unset($this->translations[$key]);
+
+        return $value;
     }
 
     /**
@@ -78,7 +80,7 @@ class TranslationSavingService
      * @param \Illuminate\Database\Eloquent\Model $model
      * @return string
      */
-    protected function getModelIdentifier(Model $model)
+    protected function getModelIdentifier(Model $model): string
     {
         return spl_object_hash($model);
     }
