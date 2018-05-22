@@ -13,9 +13,10 @@ first in how it retrieves them and second in how it stores them.
 ### Retrieving
 When you retrieve a model from the database, 
 the package will join the translation table with the translation of the current locale `config/app.php`,
-this makes it so that any translated column acts like it is "native" to the model, so just call `->column` and it'll work.
+this makes it so that any translated column acts like it is "native" to the model, 
+so just call `$model->column` and it'll work.
 
-Need the model in a different language? call `->translate('nl')` and you're done, now want to save the `nl` translation? just call `->update()`, 
+Need the model in a different language? call `$model->translate('nl')` and you're done, now want to save the `nl` translation? just call `->update()`, 
 the model knows exactly in which locale it has been loaded in.
 
 ### Storing
@@ -24,13 +25,22 @@ You'll store your translations as if they're attributes on the model, so this wi
 Animal::create(['name' => 'Ape']);
 ```
 
-But you might want to store multiple translations in one request, so you could always call the `->storeTranslation()` method.
+But you might want to store multiple translations in one request, so you could always call the `->storeTranslation()` or the `->storeTranslations()` method.
 
 ```php
-$animal = Animal::create(['name' => 'Ape']);
+$animal = Animal::create(['name' => 'Monkey']);
 
 $animal->storeTranslation('nl', [
-    'name' => 'Monkey',
+    'name' => 'Aap',
+]);
+
+$animal->storeTranslation([
+    'nl' => [
+        'name' => 'Aap',
+    ],
+    'de' => [
+        'name' => 'Affe',
+    ],
 ]);
 ```
 
