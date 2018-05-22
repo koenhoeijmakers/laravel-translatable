@@ -8,13 +8,20 @@ A fresh new way to handle model translations.
 
 # About
 What makes this package so special is the way it handles the translations, 
-first in how it retrieves them and second in how it stores them.
+how it retrieves them, how it stores them, and how it queries them.
+
+### Querying
+Due to how the package handles the translations, querying is a piece of cake, 
+while for other packages you would have a `->whereTranslation('nl', 'column', '=', 'foo')` method.
+
+But in this package you can just do `->where('column', '=', 'foo')` and it'll know what to query, just query how you used to!
 
 ### Retrieving
 When you retrieve a model from the database, 
-the package will join the translation table with the translation of the current locale `config/app.php`,
-this makes it so that any translated column acts like it is "native" to the model, 
-so just call `$model->column` and it'll work.
+the package will join the translation table with the translation of the current locale `config/app.php`.
+
+This makes it so that any translated column acts like it is "native" to the model, 
+due to this we don't have to override a lot of methods on the model which is a big plus.
 
 Need the model in a different language? call `$model->translate('nl')` and you're done, now want to save the `nl` translation? just call `->update()`, 
 the model knows in which locale it is loaded, and it'll handle it accordingly.
@@ -49,13 +56,6 @@ $animal->storeTranslation([
     ],
 ]);
 ```
-
-### Querying
-Due to how the package handles the translations, querying is a piece of cake, 
-while for other packages you would have a `->whereTranslation('nl', 'column', '=', 'foo')` method.
-
-But in this package you can just do `->where('column', '=', 'foo')` and it'll know what to query, just query how you used to!
-
 
 # Installation
 Require the package.
