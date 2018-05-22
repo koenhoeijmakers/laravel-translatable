@@ -4,7 +4,8 @@
 [![license](https://img.shields.io/github/license/koenhoeijmakers/laravel-translatable.svg?colorB=brightgreen)](https://github.com/koenhoeijmakers/laravel-translatable)
 [![Packagist](https://img.shields.io/packagist/dt/koenhoeijmakers/laravel-translatable.svg?colorB=brightgreen)](https://packagist.org/packages/koenhoeijmakers/laravel-translatable)
 
-A fresh new way to handle model translations.
+A fresh new way to handle Model translations, the translations are joined into the Model 
+instead of making you query a relation or get every single attribute's translation one by one.
 
 ## Installation
 Require the package.
@@ -18,9 +19,9 @@ php artisan vendor:publish --provider="KoenHoeijmakers\LaravelTranslatable\Trans
 ```
 
 ## Usage
-### Setting up a translatable model.
-Start off by creating a migration and a model,
-we'll go with the `Animal` model and the corresponding `AnimalTranslation` model.
+### Setting up a translatable Model.
+Start off by creating a migration and a Model,
+we'll go with the `Animal` Model and the corresponding `AnimalTranslation` Model.
 
 #### Migrations
 ```php
@@ -29,6 +30,8 @@ Schema::create('animals', function (Blueprint $table) {
     $table->timestamps();
 });
 ```
+
+Always have a `locale` and a `foreign_key` to the original Model, in our case `animal_id`.
 
 ```php
 Schema::create('animal_translations', function (Blueprint $table) {
@@ -44,6 +47,12 @@ Schema::create('animal_translations', function (Blueprint $table) {
 ```
 
 #### Models
+Register the trait on the Model, and add the columns that should be translted to the `$translatable` property,
+**But also make them fillable**, this is because the saving is handled through events,
+this way we don't have to change the `save` method and makes the package more interoperable.
+
+> So make sure the `$translatable` columns are also `$fillable` on both Models.
+
 ```php
 use Illuminate\Database\Eloquent\Model;
 use KoenHoeijmakers\LaravelTranslatable\HasTranslations;
@@ -67,11 +76,6 @@ class AnimalTranslation extends Model
 }
 ```
 
-As you might see, the `Animal` model has made the `name` column translatable, but also fillable.
-**This is needed to allow the model to save the translations properly**, in the end, what you can't set, you can't get.
-
-> So make sure the `$translatable` columns are also `$fillable`
-
 This is pretty much all there is to it, but you can read more about the package down here.
 
 ## About
@@ -85,14 +89,14 @@ while for other packages you would have a `->whereTranslation('nl', 'column', '=
 But in this package you can just do `->where('column', '=', 'foo')` and it'll know what to query, just query how you used to!
 
 ### Retrieving
-When you retrieve a model from the database, 
+When you retrieve a Model from the database, 
 the package will join the translation table with the translation of the current locale `config/app.php`.
 
-This makes it so that any translated column acts like it is "native" to the model, 
-due to this we don't have to override a lot of methods on the model which is a big plus.
+This makes it so that any translated column acts like it is "native" to the Model, 
+due to this we don't have to override a lot of methods on the Model which is a big plus.
 
-Need the model in a different language? call `$model->translate('nl')` and you're done, now want to save the `nl` translation? just call `->update()`, 
-the model knows in which locale it is loaded, and it'll handle it accordingly.
+Need the Model in a different language? call `$Model->translate('nl')` and you're done, now want to save the `nl` translation? just call `->update()`, 
+the Model knows in which locale it is loaded, and it'll handle it accordingly.
 
 ```php
 $animal = Animal::find(1);
@@ -101,7 +105,7 @@ $animal->translate('nl')->update(['name' => 'Aap']);
 ```
 
 ### Storing
-You'll store your translations as if they're attributes on the model, so this will work like a charm:
+You'll store your translations as if they're attributes on the Model, so this will work like a charm:
 ```php
 Animal::create(['name' => 'Ape']);
 ```
@@ -161,7 +165,7 @@ Refresh the translated attributes.
 public function refreshTranslation()
 ```
 
-Translate the given model (returns a new `Model`).
+Translate the given Model (returns a new `Model` instance, but translated in the given `$locale`).
 ```php
 public function translate(string $locale)
 ```
