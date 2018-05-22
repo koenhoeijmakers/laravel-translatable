@@ -6,58 +6,7 @@
 
 A fresh new way to handle model translations.
 
-# About
-What makes this package so special is the way it handles the translations, 
-how it retrieves them, how it stores them, and how it queries them.
-
-### Querying
-Due to how the package handles the translations, querying is a piece of cake, 
-while for other packages you would have a `->whereTranslation('nl', 'column', '=', 'foo')` method.
-
-But in this package you can just do `->where('column', '=', 'foo')` and it'll know what to query, just query how you used to!
-
-### Retrieving
-When you retrieve a model from the database, 
-the package will join the translation table with the translation of the current locale `config/app.php`.
-
-This makes it so that any translated column acts like it is "native" to the model, 
-due to this we don't have to override a lot of methods on the model which is a big plus.
-
-Need the model in a different language? call `$model->translate('nl')` and you're done, now want to save the `nl` translation? just call `->update()`, 
-the model knows in which locale it is loaded, and it'll handle it accordingly.
-
-```php
-$animal = Animal::find(1);
-
-$animal->translate('nl')->update(['name' => 'Aap']);
-```
-
-### Storing
-You'll store your translations as if they're attributes on the model, so this will work like a charm:
-```php
-Animal::create(['name' => 'Ape']);
-```
-
-But you might want to store multiple translations in one request, so you could always call the `->storeTranslation()` or the `->storeTranslations()` method.
-
-```php
-$animal = Animal::create(['name' => 'Monkey']);
-
-$animal->storeTranslation('nl', [
-    'name' => 'Aap',
-]);
-
-$animal->storeTranslation([
-    'nl' => [
-        'name' => 'Aap',
-    ],
-    'de' => [
-        'name' => 'Affe',
-    ],
-]);
-```
-
-# Installation
+## Installation
 Require the package.
 ```sh
 composer require koenhoeijmakers/laravel-translatable
@@ -68,8 +17,8 @@ composer require koenhoeijmakers/laravel-translatable
 php artisan vendor:publish --provider="KoenHoeijmakers\LaravelTranslatable\TranslatableServiceProvider"
 ```
 
-# Usage
-### Setting up a model.
+## Usage
+### Setting up a translatable model.
 Start off by creating a migration and a model,
 we'll go with the `Animal` model and the corresponding `AnimalTranslation` model.
 
@@ -122,3 +71,97 @@ As you might see, the `Animal` model has made the `name` column translatable, bu
 **This is needed to allow the model to save the translations properly**, in the end, what you can't set, you can't get.
 
 > So make sure the `$translatable` columns are also `$fillable`
+
+This is pretty much all there is to it, but you can read more about the package down here.
+
+## About
+What makes this package so special is the way it handles the translations, 
+how it retrieves them, how it stores them, and how it queries them.
+
+### Querying
+Due to how the package handles the translations, querying is a piece of cake, 
+while for other packages you would have a `->whereTranslation('nl', 'column', '=', 'foo')` method.
+
+But in this package you can just do `->where('column', '=', 'foo')` and it'll know what to query, just query how you used to!
+
+### Retrieving
+When you retrieve a model from the database, 
+the package will join the translation table with the translation of the current locale `config/app.php`.
+
+This makes it so that any translated column acts like it is "native" to the model, 
+due to this we don't have to override a lot of methods on the model which is a big plus.
+
+Need the model in a different language? call `$model->translate('nl')` and you're done, now want to save the `nl` translation? just call `->update()`, 
+the model knows in which locale it is loaded, and it'll handle it accordingly.
+
+```php
+$animal = Animal::find(1);
+
+$animal->translate('nl')->update(['name' => 'Aap']);
+```
+
+### Storing
+You'll store your translations as if they're attributes on the model, so this will work like a charm:
+```php
+Animal::create(['name' => 'Ape']);
+```
+
+But you might want to store multiple translations in one request, so you could always call the `->storeTranslation()` or the `->storeTranslations()` method.
+
+```php
+$animal = Animal::create(['name' => 'Monkey']);
+
+$animal->storeTranslation('nl', [
+    'name' => 'Aap',
+]);
+
+$animal->storeTranslation([
+    'nl' => [
+        'name' => 'Aap',
+    ],
+    'de' => [
+        'name' => 'Affe',
+    ],
+]);
+```
+
+## Available methods
+Check if a translation of the given `$locale` exists.
+```php
+public function translationExists(string $locale): bool
+```
+
+Get all the translatable attributes.
+```php
+public function getTranslatable(): array
+```
+
+Get all the translatable attributes and their values.
+```php
+public function getTranslatableAttributes(): array
+```
+
+Store a single translation by the given `$locale`.
+```php
+public function storeTranslation(string $locale, array $attributes = [])
+```
+
+Store multiple translations at once (just a loop for `storeTranslation()`)
+```php
+public function storeTranslations(array $translations)
+```
+
+Get the translation for the given `$locale`.
+```php
+public function getTranslation(string $locale)
+```
+
+Refresh the translated attributes.
+```php
+public function refreshTranslation()
+```
+
+Translate the given model (returns a new `Model`).
+```php
+public function translate(string $locale)
+```
