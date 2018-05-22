@@ -47,7 +47,7 @@ Schema::create('animal_translations', function (Blueprint $table) {
 ```
 
 #### Models
-Register the trait on the Model, and add the columns that should be translted to the `$translatable` property,
+Register the trait on the Model, and add the columns that should be translated to the `$translatable` property,
 **But also make them fillable**, this is because the saving is handled through events,
 this way we don't have to change the `save` method and makes the package more interoperable.
 
