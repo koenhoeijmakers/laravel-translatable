@@ -17,7 +17,13 @@ this makes it so that any translated column acts like it is "native" to the mode
 so just call `$model->column` and it'll work.
 
 Need the model in a different language? call `$model->translate('nl')` and you're done, now want to save the `nl` translation? just call `->update()`, 
-the model knows exactly in which locale it has been loaded in.
+the model knows in which locale it is loaded, and it'll handle it accordingly.
+
+```php
+$animal = Animal::find(1);
+
+$animal->translate('nl')->update(['name' => 'Aap']);
+```
 
 ### Storing
 You'll store your translations as if they're attributes on the model, so this will work like a charm:
