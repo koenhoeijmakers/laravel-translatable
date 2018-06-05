@@ -41,6 +41,10 @@ trait HasTranslations
             });
         }
 
+        static::deleting(function (self $model) {
+            $model->purgeTranslations();
+        });
+
         static::addGlobalScope(new JoinTranslationScope());
     }
 
@@ -61,6 +65,26 @@ trait HasTranslations
     public function translationExists(string $locale): bool
     {
         return $this->translations()->where($this->getLocaleKeyName(), $locale)->exists();
+    }
+
+    /**
+     * Get all the translations.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getTranslations()
+    {
+        return $this->translations()->get();
+    }
+
+    /**
+     * Purge the translations.
+     *
+     * @return mixed
+     */
+    public function purgeTranslations()
+    {
+        return $this->getTranslations()->each->delete();
     }
 
     /**
