@@ -68,23 +68,13 @@ trait HasTranslations
     }
 
     /**
-     * Get all the translations.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getTranslations()
-    {
-        return $this->translations()->get();
-    }
-
-    /**
      * Purge the translations.
      *
      * @return mixed
      */
     public function purgeTranslations()
     {
-        return $this->getTranslations()->each->delete();
+        return $this->translations()->delete();
     }
 
     /**
