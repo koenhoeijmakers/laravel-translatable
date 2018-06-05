@@ -253,4 +253,14 @@ trait HasTranslations
         return parent::newQueryWithoutScopes()
             ->withGlobalScope(JoinTranslationScope::class, new JoinTranslationScope());
     }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return $this->getTable() . '.' . $this->getKeyName();
+    }
 }
