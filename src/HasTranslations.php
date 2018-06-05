@@ -255,12 +255,13 @@ trait HasTranslations
     }
 
     /**
-     * Get the route key for the model.
+     * Retrieve the model for a bound value.
      *
-     * @return string
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function getRouteKeyName()
+    public function resolveRouteBinding($value)
     {
-        return $this->getTable() . '.' . $this->getKeyName();
+        return $this->where($this->getTable() . '.' . $this->getRouteKeyName(), $value)->first();
     }
 }
