@@ -41,6 +41,10 @@ trait HasTranslations
             });
         }
 
+        static::deleting(function (self $model) {
+            $model->purgeTranslations();
+        });
+
         static::addGlobalScope(new JoinTranslationScope());
     }
 
@@ -61,6 +65,16 @@ trait HasTranslations
     public function translationExists(string $locale): bool
     {
         return $this->translations()->where($this->getLocaleKeyName(), $locale)->exists();
+    }
+
+    /**
+     * Purge the translations.
+     *
+     * @return mixed
+     */
+    public function purgeTranslations()
+    {
+        return $this->translations()->delete();
     }
 
     /**
@@ -247,5 +261,16 @@ trait HasTranslations
     {
         return parent::newQueryWithoutScopes()
             ->withGlobalScope(JoinTranslationScope::class, new JoinTranslationScope());
+    }
+
+    /**
+     * Retrieve the model for a bound value.
+     *
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function resolveRouteBinding($value)
+    {
+        return $this->where($this->getTable() . '.' . $this->getRouteKeyName(), $value)->first();
     }
 }
