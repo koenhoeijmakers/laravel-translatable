@@ -70,11 +70,9 @@ trait HasTranslations
      */
     public function getTranslationModel(): string
     {
-        if (isset($this->translationModel)) {
-            return $this->translationModel;
-        }
-
-        return get_class($this) . $this->getTranslationModelSuffix();
+        return property_exists($this, 'translationModel')
+            ? $this->translationModel
+            : get_class($this) . $this->getTranslationModelSuffix();
     }
 
     /**
@@ -106,11 +104,7 @@ trait HasTranslations
      */
     public function getTranslationForeignKey()
     {
-        if (isset($this->translationForeignKey)) {
-            return $this->translationForeignKey;
-        }
-
-        return $this->getForeignKey();
+        return property_exists($this, 'translationForeignKey') ? $this->translationForeignKey : $this->getForeignKey();
     }
 
     /**
@@ -189,7 +183,8 @@ trait HasTranslations
      */
     public function getLocaleKeyName(): string
     {
-        return $this->localeKeyName ?? config('translatable.locale_key_name', 'locale');
+        return property_exists($this, 'localeKeyName') ? $this->localeKeyName
+            : config('translatable.locale_key_name', 'locale');
     }
 
     /**
@@ -199,7 +194,7 @@ trait HasTranslations
      */
     public function getLocale(): string
     {
-        return $this->currentLocale ?? app()->getLocale();
+        return property_exists($this, 'currentLocale') ? $this->currentLocale : app()->getLocale();
     }
 
     /**
