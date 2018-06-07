@@ -253,6 +253,20 @@ trait HasTranslations
     }
 
     /**
+     * Format the translated columns.
+     *
+     * @return array
+     */
+    public function formatTranslatableColumnsForSelect(): array
+    {
+        $table = $this->getTranslationTable();
+
+        return array_map(function ($item) use ($table) {
+            return $table . '.' . $item;
+        }, $this->getTranslatable());
+    }
+
+    /**
      * Get a new query builder that doesn't have any global scopes (except the JoinTranslationScope).
      *
      * @return \Illuminate\Database\Eloquent\Builder
