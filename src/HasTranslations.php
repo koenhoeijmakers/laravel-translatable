@@ -191,6 +191,16 @@ trait HasTranslations
     }
 
     /**
+     * @param string $locale
+     * @param string $name
+     * @return mixed
+     */
+    public function getTranslationValue(string $locale, string $name)
+    {
+        return $this->translations()->where($this->getLocaleKeyName(), $locale)->value($name);
+    }
+
+    /**
      * The locale key name.
      *
      * @return string
