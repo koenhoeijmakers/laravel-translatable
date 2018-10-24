@@ -3,6 +3,7 @@
 namespace KoenHoeijmakers\LaravelTranslatable;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 use KoenHoeijmakers\LaravelTranslatable\Exceptions\MissingTranslationsException;
 use KoenHoeijmakers\LaravelTranslatable\Scopes\JoinTranslationScope;
@@ -51,7 +52,7 @@ trait HasTranslations
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function translations()
+    public function translations(): HasMany
     {
         return $this->hasMany($this->getTranslationModel(), $this->getTranslationForeignKey());
     }
@@ -129,7 +130,7 @@ trait HasTranslations
      */
     public function getTranslatable(): array
     {
-        if (!isset($this->translatable)) {
+        if (! isset($this->translatable)) {
             throw new MissingTranslationsException('Model "' . static::class . '" is missing translations');
         }
 
@@ -153,7 +154,7 @@ trait HasTranslations
      */
     public function storeTranslation(string $locale, array $attributes = [])
     {
-        if (!is_null($model = $this->translations()->where($this->getLocaleKeyName(), $locale)->first())) {
+        if (! is_null($model = $this->translations()->where($this->getLocaleKeyName(), $locale)->first())) {
             $model->update($attributes);
 
             return $model;
@@ -224,11 +225,11 @@ trait HasTranslations
     /**
      * Refresh the translation (in the current locale).
      *
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return \Illuminate\Database\Eloquent\Model|null|HasTranslations
      */
     public function refreshTranslation()
     {
-        if (!$this->exists) {
+        if (! $this->exists) {
             return null;
         }
 
@@ -253,7 +254,7 @@ trait HasTranslations
      */
     public function translate(string $locale)
     {
-        if (!$this->exists) {
+        if (! $this->exists) {
             return null;
         }
 
@@ -290,7 +291,7 @@ trait HasTranslations
     /**
      * Retrieve the model for a bound value.
      *
-     * @param  mixed  $value
+     * @param  mixed $value
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function resolveRouteBinding($value)
