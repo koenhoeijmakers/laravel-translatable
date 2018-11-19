@@ -208,7 +208,8 @@ trait HasTranslations
      */
     public function getLocaleKeyName(): string
     {
-        return property_exists($this, 'localeKeyName') ? $this->localeKeyName
+        return property_exists($this, 'localeKeyName') 
+            ? $this->localeKeyName
             : config('translatable.locale_key_name', 'locale');
     }
 
@@ -219,7 +220,9 @@ trait HasTranslations
      */
     public function getLocale(): string
     {
-        return property_exists($this, 'currentLocale') ? $this->currentLocale : app()->getLocale();
+        return null !== $this->currentLocale
+            ? $this->currentLocale 
+            : app()->getLocale();
     }
 
     /**
