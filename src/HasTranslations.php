@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KoenHoeijmakers\LaravelTranslatable;
 
@@ -31,22 +31,22 @@ trait HasTranslations
     public static function bootHasTranslations()
     {
         if (config('translatable.use_saving_service', true)) {
-            static::saving(function (self $model) {
+            self::saving(function (self $model) {
                 app(TranslationSavingService::class)->rememberTranslationForModel($model);
             });
 
-            static::saved(function (self $model) {
+            self::saved(function (self $model) {
                 app(TranslationSavingService::class)->storeTranslationOnModel($model);
 
                 $model->refreshTranslation();
             });
         }
 
-        static::deleting(function (self $model) {
+        self::deleting(function (self $model) {
             $model->purgeTranslations();
         });
 
-        static::addGlobalScope(new JoinTranslationScope());
+        self::addGlobalScope(new JoinTranslationScope());
     }
 
     /**
@@ -131,7 +131,7 @@ trait HasTranslations
     public function getTranslatable(): array
     {
         if (! isset($this->translatable)) {
-            throw new MissingTranslationsException('Model "' . static::class . '" is missing translations');
+            throw new MissingTranslationsException('Model "' . self::class . '" is missing translations');
         }
 
         return $this->translatable;
@@ -210,7 +210,7 @@ trait HasTranslations
     {
         return property_exists($this, 'localeKeyName') 
             ? $this->localeKeyName
-            : config('translatable.locale_key_name', 'locale');
+            : config()->get('translatable.locale_key_name', 'locale');
     }
 
     /**
@@ -237,7 +237,7 @@ trait HasTranslations
         }
 
         $attributes = Arr::only(
-            static::findOrFail($this->getKey())->attributes, $this->getTranslatable()
+            self::query()->findOrFail($this->getKey())->attributes, $this->getTranslatable()
         );
 
         foreach ($attributes as $key => $value) {
@@ -299,6 +299,6 @@ trait HasTranslations
      */
     public function resolveRouteBinding($value)
     {
-        return $this->where($this->getTable() . '.' . $this->getRouteKeyName(), $value)->first();
+        return self::query()->where($this->getTable() . '.' . $this->getRouteKeyName(), $value)->first();
     }
 }
