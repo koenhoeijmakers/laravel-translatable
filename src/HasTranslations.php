@@ -237,7 +237,7 @@ trait HasTranslations
         }
 
         $attributes = Arr::only(
-            self::query()->findOrFail($this->getKey())->attributes, $this->getTranslatable()
+            $this->newQuery()->findOrFail($this->getKey())->attributes, $this->getTranslatable()
         );
 
         foreach ($attributes as $key => $value) {
@@ -299,6 +299,6 @@ trait HasTranslations
      */
     public function resolveRouteBinding($value)
     {
-        return self::query()->where($this->getTable() . '.' . $this->getRouteKeyName(), $value)->first();
+        return $this->newQuery()->where($this->getTable() . '.' . $this->getRouteKeyName(), $value)->first();
     }
 }
