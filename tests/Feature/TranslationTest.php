@@ -60,10 +60,9 @@ class TranslationTest extends TestCase
             'de' => ['name' => 'Affe'],
         ]);
 
+        $this->assertDatabaseHas('test_models', ['id' => $model->getKey()]);
         $this->assertTrue($model->translationExists('nl'));
         $this->assertTrue($model->translationExists('de'));
-
-        $this->assertDatabaseHas('test_models', ['id' => $model->getKey()]);
     }
 
     public function testCanRetrieveADifferentTranslation()
@@ -80,11 +79,32 @@ class TranslationTest extends TestCase
         /** @var \KoenHoeijmakers\LaravelTranslatable\Tests\Feature\TestModel $model */
         $model = TestModel::query()->find(1);
 
-        /** @var \KoenHoeijmakers\LaravelTranslatable\Tests\Feature\TestModel $translatedModel */
-        $translatedModel = $model->translate('nl');
+        $model->translate('nl');
 
-        $this->assertEquals($translatedModel->getLocale(), 'nl');
-        $this->assertEquals($translatedModel->getAttribute('name'), 'Aap');
+        $this->assertEquals($model->getLocale(), 'nl');
+        $this->assertEquals($model->getAttribute('name'), 'Aap');
+    }
+
+    public function testCanRetrieveADifferentTranslationAndItsUpdatedInThatLocale()
+    {
+        /** @var \KoenHoeijmakers\LaravelTranslatable\Tests\Feature\TestModel $model */
+        $model = TestModel::query()->create([
+            'name' => 'Monkey',
+        ]);
+
+        $model->storeTranslation('nl', ['name' => 'Aap']);
+
+        $this->assertTrue($model->translationExists('nl'));
+
+        $model->translate('nl');
+
+        $this->assertEquals($model->getLocale(), 'nl');
+        $this->assertEquals($model->getAttribute('name'), 'Aap');
+
+        $model->update(['name' => 'Gorilla']);
+
+        $this->assertEquals($model->getAttribute('name'), 'Gorilla');
+        $this->assertEquals(TestModel::query()->find(1)->getAttribute('name'), 'Monkey');
     }
 }
 
