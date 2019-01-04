@@ -3,11 +3,14 @@
 namespace KoenHoeijmakers\LaravelTranslatable\Tests\Feature;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use KoenHoeijmakers\LaravelTranslatable\HasTranslations;
 use KoenHoeijmakers\LaravelTranslatable\Tests\TestCase;
 
 class TranslationTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function testTranslationsAreBeingSaved()
     {
         $model = TestModel::query()->create([
