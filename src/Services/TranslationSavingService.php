@@ -1,9 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KoenHoeijmakers\LaravelTranslatable\Services;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Application;
 
 class TranslationSavingService
 {
@@ -51,7 +50,7 @@ class TranslationSavingService
      * Remember the translation on the given key.
      *
      * @param string $key
-     * @param array $attributes
+     * @param array  $attributes
      * @return void
      */
     public function rememberTranslation(string $key, array $attributes)
