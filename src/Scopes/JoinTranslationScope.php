@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace KoenHoeijmakers\LaravelTranslatable\Scopes;
 
@@ -23,6 +25,6 @@ class JoinTranslationScope implements Scope
                 $model->getTable() . '.' . $model->getKeyName(),
                 $model->getTranslationTable() . '.' . $model->getForeignKey()
             )->where($model->getLocaleKeyName(), $model->getLocale());
-        })->select($model->getTable() . '.*', ...$model->formatTranslatableColumnsForSelect());
+        })->addSelect($model->getTable() . '.*', ...$model->formatTranslatableColumnsForSelect());
     }
 }

@@ -203,6 +203,18 @@ class TranslationTest extends TestCase
 
         $this->assertEquals('lang', $model->getLocaleKeyName());
     }
+
+    public function testCanAddSelect()
+    {
+        /** @var \KoenHoeijmakers\LaravelTranslatable\Tests\Feature\TestModel $model */
+        $model = TestModel::query()->create([
+            'name' => 'Monkey',
+        ]);
+
+        $result = TestModel::query()->select('test_model_translations.id AS translation_id')->first();
+
+        $this->assertEquals($model->getTranslation('en')->getKey(), $result->translation_id);
+    }
 }
 
 class TestModel extends Model
