@@ -1,6 +1,7 @@
 # Laravel Translatable
 [![Packagist](https://img.shields.io/packagist/v/koenhoeijmakers/laravel-translatable.svg?colorB=brightgreen)](https://packagist.org/packages/koenhoeijmakers/laravel-translatable)
-[![Build Status](https://img.shields.io/travis/koenhoeijmakers/laravel-translatable/master.svg)](https://travis-ci.org/koenhoeijmakers/laravel-translatable)
+[![Build Status](https://scrutinizer-ci.com/g/koenhoeijmakers/laravel-translatable/badges/build.png?b=master)](https://scrutinizer-ci.com/g/koenhoeijmakers/laravel-translatable/build-status/master) 
+[![Code Coverage](https://scrutinizer-ci.com/g/koenhoeijmakers/laravel-translatable/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/koenhoeijmakers/laravel-translatable/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/koenhoeijmakers/laravel-translatable/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/koenhoeijmakers/laravel-translatable/?branch=master)
 [![license](https://img.shields.io/github/license/koenhoeijmakers/laravel-translatable.svg?colorB=brightgreen)](https://github.com/koenhoeijmakers/laravel-translatable)
 [![Packagist](https://img.shields.io/packagist/dt/koenhoeijmakers/laravel-translatable.svg?colorB=brightgreen)](https://packagist.org/packages/koenhoeijmakers/laravel-translatable)
