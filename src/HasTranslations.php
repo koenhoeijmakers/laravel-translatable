@@ -31,18 +31,18 @@ trait HasTranslations
     public static function bootHasTranslations()
     {
         if (config('translatable.use_saving_service', true)) {
-            self::saving(function (self $model) {
+            self::saving(function ($model) {
                 app(TranslationSavingService::class)->rememberTranslationForModel($model);
             });
 
-            self::saved(function (self $model) {
+            self::saved(function ($model) {
                 app(TranslationSavingService::class)->storeTranslationOnModel($model);
 
                 $model->refreshTranslation();
             });
         }
 
-        self::deleting(function (self $model) {
+        self::deleting(function ($model) {
             $model->purgeTranslations();
         });
 
@@ -131,7 +131,7 @@ trait HasTranslations
     public function getTranslatable(): array
     {
         if (! isset($this->translatable)) {
-            throw new MissingTranslationsException('Model "' . self::class . '" is missing translations');
+            throw new MissingTranslationsException('Model "' . get_class($this) . '" is missing translations');
         }
 
         return $this->translatable;
