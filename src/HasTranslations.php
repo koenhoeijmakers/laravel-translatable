@@ -60,7 +60,7 @@ trait HasTranslations
     /**
      * Check if the translation by the given locale exists.
      *
-     * @param string $locale
+     * @param  string $locale
      * @return bool
      */
     public function translationExists(string $locale): bool
@@ -148,8 +148,8 @@ trait HasTranslations
     }
 
     /**
-     * @param string $locale
-     * @param array<string, mixed> $attributes
+     * @param  string               $locale
+     * @param  array<string, mixed> $attributes
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function storeTranslation(string $locale, array $attributes = [])
@@ -170,7 +170,7 @@ trait HasTranslations
     /**
      * Store many translations at once.
      *
-     * @param array<string, array> $translations
+     * @param  array<string, array> $translations
      * @return $this
      */
     public function storeTranslations(array $translations)
@@ -183,7 +183,7 @@ trait HasTranslations
     }
 
     /**
-     * @param string $locale
+     * @param  string $locale
      * @return \Illuminate\Database\Eloquent\Model|self
      */
     public function getTranslation(string $locale)
@@ -192,8 +192,8 @@ trait HasTranslations
     }
 
     /**
-     * @param string $locale
-     * @param string $name
+     * @param  string $locale
+     * @param  string $name
      * @return mixed
      */
     public function getTranslationValue(string $locale, string $name)
@@ -208,7 +208,7 @@ trait HasTranslations
      */
     public function getLocaleKeyName(): string
     {
-        return property_exists($this, 'localeKeyName') 
+        return property_exists($this, 'localeKeyName')
             ? $this->localeKeyName
             : config()->get('translatable.locale_key_name', 'locale');
     }
@@ -221,7 +221,7 @@ trait HasTranslations
     public function getLocale(): string
     {
         return null !== $this->currentLocale
-            ? $this->currentLocale 
+            ? $this->currentLocale
             : app()->getLocale();
     }
 
@@ -229,6 +229,7 @@ trait HasTranslations
      * Refresh the translation (in the current locale).
      *
      * @return \Illuminate\Database\Eloquent\Model|null|HasTranslations
+     * @throws \KoenHoeijmakers\LaravelTranslatable\Exceptions\MissingTranslationsException
      */
     public function refreshTranslation()
     {
@@ -252,7 +253,7 @@ trait HasTranslations
     /**
      * Translate the model to the given locale.
      *
-     * @param string $locale
+     * @param  string $locale
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function translate(string $locale)
@@ -270,6 +271,7 @@ trait HasTranslations
      * Format the translated columns.
      *
      * @return array
+     * @throws \KoenHoeijmakers\LaravelTranslatable\Exceptions\MissingTranslationsException
      */
     public function formatTranslatableColumnsForSelect(): array
     {
@@ -295,10 +297,13 @@ trait HasTranslations
      * Retrieve the model for a bound value.
      *
      * @param  mixed $value
+     * @param  null  $field
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function resolveRouteBinding($value)
+    public function resolveRouteBinding($value, $field = null)
     {
-        return $this->newQuery()->where($this->getTable() . '.' . $this->getRouteKeyName(), $value)->first();
+        $field = $field ?? $this->getRouteKeyName();
+
+        return $this->newQuery()->where($this->getTable() . '.' . $field, $value)->first();
     }
 }
