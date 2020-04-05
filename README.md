@@ -119,7 +119,7 @@ $animal->storeTranslation('nl', [
     'name' => 'Aap',
 ]);
 
-$animal->storeTranslation([
+$animal->storeTranslations([
     'nl' => [
         'name' => 'Aap',
     ],
